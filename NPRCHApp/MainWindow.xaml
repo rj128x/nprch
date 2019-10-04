@@ -1,0 +1,121 @@
+﻿<Window x:Class="NPRCHApp.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:d="http://schemas.microsoft.com/expression/blend/2008"
+        xmlns:mc="http://schemas.openxmlformats.org/markup-compatibility/2006"
+        xmlns:local="clr-namespace:NPRCHApp"
+        mc:Ignorable="d"
+        Title="MainWindow" Height="900" Width="1500">
+    <Grid>
+        <Grid>
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="230"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+            <Grid.RowDefinitions>
+                <RowDefinition Height="*"/>
+                <RowDefinition Height="30"/>
+            </Grid.RowDefinitions>
+            <Grid Grid.Column="0" Grid.Row="0">
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="250"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+                <StackPanel Orientation="Vertical" >
+                    <CheckBox Content="Резервная схема" IsChecked="False" Name="chbReserv"/>
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                        <TextBlock Text="Сдвиг"/>
+                        <TextBox Name="txtDiffHour" Width="50" HorizontalAlignment="Right" FontSize="20"/>
+                    </StackPanel>
+                    <Calendar Name="clndDate"  IsTodayHighlighted="False"/>
+
+                    <Button Name="btnLoadFiles" Click="btnLoadFiles_Click" Content="Получить файлы" Height="30" />
+                </StackPanel>
+                <ScrollViewer Grid.Row="1">
+                    <ListBox Name="lbHours" MouseDoubleClick="lbHours_MouseDoubleClick"/>
+                </ScrollViewer>
+
+
+
+
+            </Grid>
+            <TabControl Grid.Column="1">
+                <TabItem Header="Час" Name="tabHour">
+                    <TabControl >
+                        <TabItem Header="График" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="54">
+                            <local:ChartZedControl x:Name="chart"></local:ChartZedControl>
+                        </TabItem>
+
+                        <TabItem Header="Данные" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="54">
+                            <DataGrid  Name="grdData"  AutoGenerateColumns="False" CanUserResizeColumns="True">
+                                <DataGrid.Columns >
+                                    <DataGridTextColumn Header="Дата" Binding="{Binding Date,StringFormat='dd.MM.yyyy HH:mm:ss'}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Частота [об]" Binding="{Binding F_ob,StringFormat='0.0000'}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Частота [Гц]" Binding="{Binding F_gc,StringFormat='0.0000'}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Pфакт" Binding="{Binding P_fakt,StringFormat='0.0000'}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Pплн" Binding="{Binding P_plan,StringFormat='0.0000'}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Pзвн" Binding="{Binding P_zvn,StringFormat='0.0000'}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Pперв" Binding="{Binding P_perv,StringFormat='0.0000'}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Pмин" Binding="{Binding P_min,StringFormat='0.0000'}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Pмакс" Binding="{Binding P_max,StringFormat='0.0000'}" ></DataGridTextColumn>
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                        <TabItem Header="Текст" HorizontalAlignment="Left" Height="20" Margin="0" VerticalAlignment="Top" Width="54">
+                            <TextBox Name="txtFile" TextWrapping="Wrap"/>
+                        </TabItem>
+
+
+                    </TabControl>
+                </TabItem>
+                <TabItem Header="Сутки" Name="tabDay">
+                    <TabControl>
+                        <TabItem Header="Расчет" Name="tabGridData">
+                            <DataGrid  Name="grdDayData" AutoGenerateColumns="False" CanUserResizeColumns="True">
+                                <DataGrid.Columns>
+                                    <DataGridTextColumn Header="Дата" Binding="{Binding Date}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Файл" Binding="{Binding FileName}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="P[>100]" Binding="{Binding cntPower}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="F[>100]" Binding="{Binding cntFreq}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="P[&lt;60]" Binding="{Binding TRepeatPower}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="F[&lt;60]" Binding="{Binding TRepeatFreq}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Bad[&lt;60]" Binding="{Binding cntBad}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="+-7[&lt;60]" Binding="{Binding TNoRezerv}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="План[&lt;60]" Binding="{Binding cntBadPower}" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="Реакц" Binding="{Binding NoReactComment}" Width="150"  ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="CC" Binding="{Binding KolebComment}" Width="150" ></DataGridTextColumn>
+                                    <DataGridTextColumn Header="NA" Binding="{Binding NoAutoComment}" Width="150" ></DataGridTextColumn>
+
+                                </DataGrid.Columns>
+                            </DataGrid>
+                        </TabItem>
+                        <TabItem Header="Статизм" Name="tabStatizm">
+                            <Grid>
+                                <Grid.RowDefinitions >
+                                    <RowDefinition Height="30"/>
+                                    <RowDefinition Height="*"/>
+                                </Grid.RowDefinitions>
+                                <StackPanel Orientation="Horizontal">
+                                    <TextBox Name="txtBlock" Text="10" Height="30" FontSize="17"/>
+                                    <Button Grid.Row="0" Content="Считать статизм" Name="btnCalcStatizm" Click="btnCalcStatizm_Click" />
+                                    <CheckBox Name="chkCalcSecond" Visibility="Visible" Content="2 метода" IsChecked="False" FontSize="20" />
+                                    <TextBlock FontSize="20" Text="" Name="txtRHO" Margin="20,0,0,0"/>
+                                    <TextBlock FontSize="20" Text="" Name="txtStatizm" Margin="20,0,0,0"/>
+                                    <TextBlock FontSize="20" Text="" Name="txtStatizm2" Margin="20,0,0,0"/>
+                                </StackPanel>
+                                <local:ChartZedControl x:Name="chartStatizm" Grid.Row="1"/>
+
+                            </Grid>
+                        </TabItem>
+                    </TabControl>
+                </TabItem>
+
+            </TabControl>
+            <StatusBar  Grid.Row="1" Grid.ColumnSpan="2" Name="statusBar" >
+                <TextBlock Name="txtStatus"  Text="{Binding StatusText, Mode=OneWay}"/>
+            </StatusBar>
+        </Grid>
+
+    </Grid>
+
+</Window>

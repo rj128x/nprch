@@ -1,0 +1,13 @@
+﻿<?xml version="1.0" encoding="utf-8" ?>
+<Settings xmlns:xsi="http://www.w3.org/2001/XMLSchema-instance"
+			 xmlns:xsd="http://www.w3.org/2001/XMLSchema">
+
+  <FTPActive>false</FTPActive>
+  <FTPServer>10.7.3.14</FTPServer>
+  <FTPPort>21</FTPPort>
+  <FTPUser>nprch_i_votges</FTPUser>
+  <FTPPassword>V0t#1Nt</FTPPassword>
+  <FTPFolder></FTPFolder>
+  <BlocksString>10~100~35~100~48;</BlocksString>
+
+</Settings>
